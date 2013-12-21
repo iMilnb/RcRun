@@ -28,7 +28,7 @@ public class OnStartupRecv extends BroadcastReceiver {
 			os = new DataOutputStream(p.getOutputStream());
 			os.writeBytes(cmd);
 			os.writeBytes("exit\n");  
-	        os.flush();
+			os.flush();
 
 	        try {
 	        	p.waitFor();
