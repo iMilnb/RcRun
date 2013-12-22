@@ -17,10 +17,10 @@ public class OnStartupRecv extends BroadcastReceiver {
 								TAG = "RcRunStartupRecv",
 								shell = "/system/bin/sh";
 	
-	private void suexec(String rc) {
+	private void suexec(String rc, String action) {
 		Process p = null;
 		DataOutputStream os = null;
-		String cmd = shell + " " + rc + "\n";
+		String cmd = shell + " " + rc + " " + action + "\n";
 
 		Log.d(TAG, "Executing: " + cmd);
 		try {
@@ -30,8 +30,8 @@ public class OnStartupRecv extends BroadcastReceiver {
 			os.writeBytes("exit\n");  
 			os.flush();
 
-	        try {
-	        	p.waitFor();
+			try {
+				p.waitFor();
 	        } catch (InterruptedException e) {
 	        	e.printStackTrace();
 	        }
@@ -41,7 +41,7 @@ public class OnStartupRecv extends BroadcastReceiver {
 		}
 	}
 	
-	private boolean rcdParse() {
+	private boolean rcdParse(Context context, String action) {
 		File f;
 		String sdroot = Environment.getExternalStorageDirectory().toString();
 		String rcd = sdroot + File.separator + "rc.d";
@@ -50,12 +50,13 @@ public class OnStartupRecv extends BroadcastReceiver {
 		if (f.exists() == false) {
 			Log.w(TAG, "rc.d directory does not exist, creating");
 			f.mkdirs();
+			AssetHandle.copyAsset(context, rcd, "rc");
 			return false;
 		}
 		File list[] = f.listFiles();
 		Arrays.sort(list);
 		for (int i = 0; i < list.length; i++) {
-			suexec(rcd + File.separator + list[i].getName());
+			suexec(rcd + File.separator + list[i].getName(), action);
 		}
 		return true;
 	}
@@ -65,7 +66,7 @@ public class OnStartupRecv extends BroadcastReceiver {
 		String action = intent.getAction();
 		if (action.equalsIgnoreCase(BOOT_ACTION)) {
 			Log.d(TAG, "Got BOOT_COMPLETED");
-			if (rcdParse() == false) {
+			if (rcdParse(context, "start") == false) {
 				Log.d(TAG, "no script to start");
 			}
 		}
