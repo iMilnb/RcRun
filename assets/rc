@@ -1,0 +1,25 @@
+#!/system/bin/sh
+
+# example rc script
+
+name="foo"
+action=$1
+
+# default to start if no action specified
+[ -z "${action}" ] && action=start
+
+case $action in
+	start)
+		echo -n starting ${name}...
+		echo done.
+		;;
+	stop)
+		echo -n stopping ${name}...
+		echo done.
+		;;
+	*)
+		exit 1
+		;;
+esac
+
+exit 0
