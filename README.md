@@ -32,7 +32,7 @@ service straight after installation, you'll have to send this message using
 `adb`:
 
 ```
-$ adb -s <device> shell am broadcast -a android.intent.action.BOOT_COMPLETED -c aandroid.intent.category.HOME -n net.imil.rcrun/.OnStartupRecv
+$ adb -s <device> shell am broadcast -a android.intent.action.BOOT_COMPLETED -c android.intent.category.HOME -n net.imil.rcrun/.OnStartupRecv
 ```
 
 When called the first time, `RcRun` will copy a template `rc` script to the
