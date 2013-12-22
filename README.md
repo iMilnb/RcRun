@@ -24,6 +24,20 @@ shell@jgedlte:/ $ cat /storage/sdcard0/rc.d/99dropbear
 
 ```
 
+#### Invoke `RcRun` manually
+
+`RcRun` is a service called at boot time, or more precisely, when the
+`BOOT_COMPLETED` broadcast message is received, so if you'd like to start the
+service straight after installation, you'll have to send this message using
+`adb`:
+
+```
+$ adb -s <device> shell am broadcast -a android.intent.action.BOOT_COMPLETED -c aandroid.intent.category.HOME -n net.imil.rcrun/.OnStartupRecv
+```
+
+When called the first time, `RcRun` will copy a template `rc` script to the
+`rc.d` directory. From there, you could think of many complex scenarios.
+
 #### TODO
 
 Lots of stuff. Please be indulgent, this is actually my first ever Android app.
